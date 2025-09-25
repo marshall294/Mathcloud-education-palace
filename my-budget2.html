@@ -78,6 +78,11 @@
         "Other": expenses * 0.15,
       };
 
+      // Calculate total balance for this month
+      const totalSpent = Object.values(data.expenses||{}).reduce((sum, c) => sum + (c.spent||0), 0);
+      const remainingExpenses = Object.values(categories).reduce((sum,v)=>sum+v,0) - totalSpent;
+      const totalBalance = savings + remainingExpenses;
+
       let html = `
         <h1 class="text-2xl font-bold mb-4">${month} Budget</h1>
         <div class="mb-4 flex flex-wrap gap-2">
@@ -89,6 +94,7 @@
           <p class="mb-2"><b>Total Income:</b> ${formatNaira(totalIncome)}</p>
           <p class="mb-2 text-green-700"><b>Savings (10%):</b> ${formatNaira(savings)}</p>
           <p class="mb-2 text-red-700"><b>Expenses (90%):</b> ${formatNaira(expenses)}</p>
+          <p class="mb-2 text-purple-700"><b>Total Balance:</b> ${formatNaira(totalBalance)}</p>
         </div>
         <h2 class="text-lg font-bold mt-4 mb-2">Income Sources</h2>
         <ul class="bg-white p-4 rounded-lg shadow mb-4 space-y-1">
@@ -167,8 +173,10 @@
             totalIncome += inc.amount;
             sourceTotals[inc.name] = (sourceTotals[inc.name]||0) + inc.amount;
           });
-          totalSavings += totalIncome*0.1;
-          totalExpenses += totalIncome*0.9;
+          const monthExpenses = (data.incomes||[]).reduce((a,b)=>a+b.amount,0)*0.9;
+          const monthSavings = (data.incomes||[]).reduce((a,b)=>a+b.amount,0)*0.1;
+          totalSavings += monthSavings;
+          totalExpenses += monthExpenses;
 
           if(data.expenses){
             for(const c in data.expenses){
@@ -183,15 +191,17 @@
       }
 
       const expenseBalance = totalExpenses - totalSpent;
+      const totalBalance = totalSavings + expenseBalance;
 
       let html = `
         <h1 class="text-2xl font-bold mb-4">📊 Cumulative Summary</h1>
-        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
           <div class="bg-white p-4 rounded-lg shadow"><h2 class="font-semibold">Total Income</h2><p class="text-xl font-bold text-blue-600">${formatNaira(totalIncome)}</p></div>
           <div class="bg-white p-4 rounded-lg shadow"><h2 class="font-semibold">Allocated Expenses</h2><p class="text-xl font-bold text-red-600">${formatNaira(totalExpenses)}</p></div>
           <div class="bg-white p-4 rounded-lg shadow"><h2 class="font-semibold">Spent</h2><p class="text-xl font-bold text-orange-600">${formatNaira(totalSpent)}</p></div>
           <div class="bg-white p-4 rounded-lg shadow"><h2 class="font-semibold">Expense Balance</h2><p class="text-xl font-bold text-green-600">${formatNaira(expenseBalance)}</p></div>
           <div class="bg-white p-4 rounded-lg shadow"><h2 class="font-semibold">Savings</h2><p class="text-xl font-bold text-green-700">${formatNaira(totalSavings)}</p></div>
+          <div class="bg-white p-4 rounded-lg shadow"><h2 class="font-semibold">Total Balance</h2><p class="text-xl font-bold text-purple-700">${formatNaira(totalBalance)}</p></div>
         </div>
 
         <h2 class="text-xl font-bold mt-6 mb-2">Category Breakdown (Spent)</h2>
@@ -241,4 +251,4 @@
     showPage("January");
   </script>
 </body>
-</html>
+  </html>
