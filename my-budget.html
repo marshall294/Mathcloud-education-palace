@@ -78,13 +78,13 @@
       let html = `
         <h1 class="text-2xl font-bold mb-4">${month} Budget</h1>
         <div class="mb-4 flex flex-wrap gap-2">
-          <input type="number" id="incomeInput" placeholder="Enter Income" class="border p-2 rounded w-48">
+          <input type="number" id="incomeInput" placeholder="Enter Income (₦)" class="border p-2 rounded w-48">
           <button onclick="addIncome('${month}')" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ Add Income</button>
         </div>
         <div class="bg-white p-4 rounded-lg shadow mb-4">
-          <p class="mb-2"><b>Total Income:</b> $${totalIncome.toFixed(2)}</p>
-          <p class="mb-2 text-green-700"><b>Savings (10%):</b> $${savings.toFixed(2)}</p>
-          <p class="mb-2 text-red-700"><b>Expenses (90%):</b> $${expenses.toFixed(2)}</p>
+          <p class="mb-2"><b>Total Income:</b> ₦${totalIncome.toFixed(2)}</p>
+          <p class="mb-2 text-green-700"><b>Savings (10%):</b> ₦${savings.toFixed(2)}</p>
+          <p class="mb-2 text-red-700"><b>Expenses (90%):</b> ₦${expenses.toFixed(2)}</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       `;
@@ -95,10 +95,10 @@
         html += `
           <div class="bg-white p-4 rounded-lg shadow flex flex-col">
             <h2 class="font-semibold text-lg mb-2">${key}</h2>
-            <p>Allocated: $${value.toFixed(2)}</p>
+            <p>Allocated: ₦${value.toFixed(2)}</p>
             <label class="mt-2 text-sm text-gray-600">Spent:</label>
             <input type="number" value="${spent}" onchange="updateSpent('${month}','${key}',this.value,${value})" class="border rounded p-2 mt-1 w-full">
-            <p class="mt-2">Balance: <span id="${month}-${key}-balance" class="font-bold text-green-600">$${balance.toFixed(2)}</span></p>
+            <p class="mt-2">Balance: <span id="${month}-${key}-balance" class="font-bold text-green-600">₦${balance.toFixed(2)}</span></p>
             <div class="w-full bg-gray-200 h-2 rounded mt-3">
               <div class="bg-blue-500 h-2 rounded" style="width:${(spent/value*100).toFixed(0)}%"></div>
             </div>
@@ -125,52 +125,92 @@
       if(isNaN(spent) || spent<0) spent=0;
       const docRef = db.collection("budget").doc(month);
       await docRef.set({ expenses: { [category]: { spent: spent } } }, { merge:true });
-      document.getElementById(`${month}-${category}-balance`).innerText = "$"+(allocated-spent).toFixed(2);
+      document.getElementById(`${month}-${category}-balance`).innerText = "₦"+(allocated-spent).toFixed(2);
       showPage(month);
     }
 
     // ---------------- CUMULATIVE SUMMARY ----------------
     async function renderCumulative(){
-      let totalIncome=0, totalSavings=0, totalExpenses=0;
+      let totalIncome=0, totalSavings=0, totalExpenses=0, totalSpent=0;
+      let categoryTotals = { "School Fees":0, "Food":0, "Rent":0, "Other":0 };
 
       for(let m of months){
         const docSnap = await db.collection("budget").doc(m).get();
         if(docSnap.exists){
           const data = docSnap.data();
           const income = data.incomes.reduce((a,b)=>a+b,0);
+
           totalIncome += income;
           totalSavings += income*0.1;
-          totalExpenses += income*0.9;
+          const allocatedExpenses = income*0.9;
+          totalExpenses += allocatedExpenses;
+
+          if(data.expenses){
+            for(const cat in data.expenses){
+              const spent = data.expenses[cat]?.spent || 0;
+              totalSpent += spent;
+              if(categoryTotals[cat] !== undefined){
+                categoryTotals[cat] += spent;
+              }
+            }
+          }
         }
       }
 
-      const html = `
+      const expenseBalance = totalExpenses - totalSpent;
+
+      let html = `
         <h1 class="text-2xl font-bold mb-4">📊 Cumulative Summary</h1>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
           <div class="bg-white p-4 rounded-lg shadow">
             <h2 class="font-semibold text-lg">Total Income</h2>
-            <p class="text-xl font-bold text-blue-600">$${totalIncome.toFixed(2)}</p>
+            <p class="text-xl font-bold text-blue-600">₦${totalIncome.toFixed(2)}</p>
           </div>
           <div class="bg-white p-4 rounded-lg shadow">
-            <h2 class="font-semibold text-lg">Total Expenses</h2>
-            <p class="text-xl font-bold text-red-600">$${totalExpenses.toFixed(2)}</p>
+            <h2 class="font-semibold text-lg">Allocated Expenses</h2>
+            <p class="text-xl font-bold text-red-600">₦${totalExpenses.toFixed(2)}</p>
           </div>
           <div class="bg-white p-4 rounded-lg shadow">
-            <h2 class="font-semibold text-lg">Total Savings</h2>
-            <p class="text-xl font-bold text-green-600">$${totalSavings.toFixed(2)}</p>
+            <h2 class="font-semibold text-lg">Spent</h2>
+            <p class="text-xl font-bold text-orange-600">₦${totalSpent.toFixed(2)}</p>
           </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h2 class="font-semibold text-lg">Expense Balance</h2>
+            <p class="text-xl font-bold text-green-600">₦${expenseBalance.toFixed(2)}</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h2 class="font-semibold text-lg">Savings</h2>
+            <p class="text-xl font-bold text-green-700">₦${totalSavings.toFixed(2)}</p>
+          </div>
+        </div>
+
+        <h2 class="text-xl font-bold mt-6 mb-2">Category Breakdown</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      `;
+
+      for(const [cat, val] of Object.entries(categoryTotals)){
+        html += `
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="font-semibold">${cat}</h3>
+            <p class="text-lg font-bold text-gray-700">₦${val.toFixed(2)}</p>
+          </div>
+        `;
+      }
+
+      html += `
         </div>
         <canvas id="summaryChart" class="mt-6"></canvas>
       `;
+
       document.getElementById("content").innerHTML = html;
 
       new Chart(document.getElementById("summaryChart"), {
         type: 'pie',
         data: {
-          labels: ['Expenses','Savings'],
+          labels: ['Spent','Balance','Savings'],
           datasets: [{
-            data: [totalExpenses,totalSavings],
-            backgroundColor: ['#ef4444','#10b981']
+            data: [totalSpent, expenseBalance, totalSavings],
+            backgroundColor: ['#f97316','#3b82f6','#10b981']
           }]
         }
       });
@@ -198,4 +238,4 @@
     showPage("January");
   </script>
 </body>
-</html>
+  </html>
