@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Budget Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-10">
+    <div class="flex items-center justify-between">
+      <span class="font-bold text-lg">📊 My Budget Manager</span>
+    </div>
+    <div class="flex space-x-2 mt-3 overflow-x-auto pb-2">
+      <button onclick="showPage('January')" class="month-btn">Jan</button>
+      <button onclick="showPage('February')" class="month-btn">Feb</button>
+      <button onclick="showPage('March')" class="month-btn">Mar</button>
+      <button onclick="showPage('April')" class="month-btn">Apr</button>
+      <button onclick="showPage('May')" class="month-btn">May</button>
+      <button onclick="showPage('June')" class="month-btn">Jun</button>
+      <button onclick="showPage('July')" class="month-btn">Jul</button>
+      <button onclick="showPage('August')" class="month-btn">Aug</button>
+      <button onclick="showPage('September')" class="month-btn">Sep</button>
+      <button onclick="showPage('October')" class="month-btn">Oct</button>
+      <button onclick="showPage('November')" class="month-btn">Nov</button>
+      <button onclick="showPage('December')" class="month-btn">Dec</button>
+      <button onclick="showPage('Cumulative')" class="bg-yellow-400 text-black px-3 py-1 rounded-lg font-medium whitespace-nowrap">Cumulative</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="content" class="flex-1 p-4 sm:p-6"></main>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAFsHg9fK6IDnHbuxmBleEfIIfVGsuLDik",
+      authDomain: "profile-b825d.firebaseapp.com",
+      projectId: "profile-b825d",
+      storageBucket: "profile-b825d.firebasestorage.app",
+      messagingSenderId: "925276859161",
+      appId: "1:925276859161:web:194c60f6dbd9f1ef8bf388"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    // ---------------- SHOW PAGES ----------------
+    function showPage(month) {
+      if(month === "Cumulative"){ renderCumulative(); return; }
+      renderMonth(month);
+    }
+
+    // ---------------- RENDER MONTH ----------------
+    async function renderMonth(month) {
+      const docRef = db.collection("budget").doc(month);
+      const docSnap = await docRef.get();
+      let data = docSnap.exists ? docSnap.data() : { incomes: [], expenses:{} };
+
+      const totalIncome = data.incomes.reduce((a,b)=>a+b,0);
+      const expenses = totalIncome * 0.9;
+      const savings = totalIncome * 0.1;
+
+      // Expense categories
+      const categories = {
+        "School Fees": expenses * 0.30,
+        "Food": expenses * 0.30,
+        "Rent": expenses * 0.15,
+        "Other": expenses * 0.15,
+      };
+
+      let html = `
+        <h1 class="text-2xl font-bold mb-4">${month} Budget</h1>
+        <div class="mb-4 flex flex-wrap gap-2">
+          <input type="number" id="incomeInput" placeholder="Enter Income" class="border p-2 rounded w-48">
+          <button onclick="addIncome('${month}')" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ Add Income</button>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow mb-4">
+          <p class="mb-2"><b>Total Income:</b> $${totalIncome.toFixed(2)}</p>
+          <p class="mb-2 text-green-700"><b>Savings (10%):</b> $${savings.toFixed(2)}</p>
+          <p class="mb-2 text-red-700"><b>Expenses (90%):</b> $${expenses.toFixed(2)}</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      `;
+
+      for(const [key, value] of Object.entries(categories)){
+        const spent = data.expenses?.[key]?.spent || 0;
+        const balance = value - spent;
+        html += `
+          <div class="bg-white p-4 rounded-lg shadow flex flex-col">
+            <h2 class="font-semibold text-lg mb-2">${key}</h2>
+            <p>Allocated: $${value.toFixed(2)}</p>
+            <label class="mt-2 text-sm text-gray-600">Spent:</label>
+            <input type="number" value="${spent}" onchange="updateSpent('${month}','${key}',this.value,${value})" class="border rounded p-2 mt-1 w-full">
+            <p class="mt-2">Balance: <span id="${month}-${key}-balance" class="font-bold text-green-600">$${balance.toFixed(2)}</span></p>
+            <div class="w-full bg-gray-200 h-2 rounded mt-3">
+              <div class="bg-blue-500 h-2 rounded" style="width:${(spent/value*100).toFixed(0)}%"></div>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      document.getElementById("content").innerHTML = html;
+    }
+
+    // ---------------- ADD INCOME ----------------
+    async function addIncome(month){
+      const val = parseFloat(document.getElementById("incomeInput").value);
+      if(isNaN(val) || val<=0) return alert("Enter valid income");
+      const docRef = db.collection("budget").doc(month);
+      await docRef.set({ incomes: firebase.firestore.FieldValue.arrayUnion(val) }, { merge:true });
+      showPage(month);
+    }
+
+    // ---------------- UPDATE SPENT ----------------
+    async function updateSpent(month, category, spent, allocated){
+      spent = parseFloat(spent);
+      if(isNaN(spent) || spent<0) spent=0;
+      const docRef = db.collection("budget").doc(month);
+      await docRef.set({ expenses: { [category]: { spent: spent } } }, { merge:true });
+      document.getElementById(`${month}-${category}-balance`).innerText = "$"+(allocated-spent).toFixed(2);
+      showPage(month);
+    }
+
+    // ---------------- CUMULATIVE SUMMARY ----------------
+    async function renderCumulative(){
+      let totalIncome=0, totalSavings=0, totalExpenses=0;
+
+      for(let m of months){
+        const docSnap = await db.collection("budget").doc(m).get();
+        if(docSnap.exists){
+          const data = docSnap.data();
+          const income = data.incomes.reduce((a,b)=>a+b,0);
+          totalIncome += income;
+          totalSavings += income*0.1;
+          totalExpenses += income*0.9;
+        }
+      }
+
+      const html = `
+        <h1 class="text-2xl font-bold mb-4">📊 Cumulative Summary</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h2 class="font-semibold text-lg">Total Income</h2>
+            <p class="text-xl font-bold text-blue-600">$${totalIncome.toFixed(2)}</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h2 class="font-semibold text-lg">Total Expenses</h2>
+            <p class="text-xl font-bold text-red-600">$${totalExpenses.toFixed(2)}</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h2 class="font-semibold text-lg">Total Savings</h2>
+            <p class="text-xl font-bold text-green-600">$${totalSavings.toFixed(2)}</p>
+          </div>
+        </div>
+        <canvas id="summaryChart" class="mt-6"></canvas>
+      `;
+      document.getElementById("content").innerHTML = html;
+
+      new Chart(document.getElementById("summaryChart"), {
+        type: 'pie',
+        data: {
+          labels: ['Expenses','Savings'],
+          datasets: [{
+            data: [totalExpenses,totalSavings],
+            backgroundColor: ['#ef4444','#10b981']
+          }]
+        }
+      });
+    }
+
+    // ---------------- NAVBAR BUTTON STYLE ----------------
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .month-btn {
+        background: white;
+        color: #2563eb;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .month-btn:active {
+        background: #93c5fd;
+        color: white;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Default load January
+    showPage("January");
+  </script>
+</body>
+</html>
