@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coaching - MathCloud</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .fade-in { animation: fadeIn 1.5s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-white via-blue-50 to-purple-50">
+
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center px-6 py-4 shadow-lg bg-white fixed w-full z-10">
+    <h1 class="text-2xl font-bold text-blue-600">MathCloud</h1>
+    <ul class="flex space-x-6 font-semibold">
+      <li><a href="index.html" class="hover:text-purple-600">Home</a></li>
+      <li><a href="eclass.html" class="hover:text-purple-600">E-Class</a></li>
+      <li><a href="shop.html" class="hover:text-purple-600">Shop</a></li>
+      <li><a href="coaching.html" class="text-purple-600 font-bold">Coaching</a></li>
+      <li><a href="training.html" class="hover:text-purple-600">Training</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="h-[60vh] flex flex-col justify-center items-center text-center px-6 fade-in">
+    <h2 class="text-5xl font-bold text-gray-900">MathCloud <span class="text-blue-600">Coaching</span></h2>
+    <p class="mt-4 text-lg text-gray-600 max-w-2xl">Personalized 1-on-1 and group coaching sessions with top math tutors, tailored to your needs.</p>
+    <a href="#plans" class="mt-6 px-6 py-3 bg-purple-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 transition">Start Coaching</a>
+  </section>
+
+  <!-- Why Coaching -->
+  <section class="px-8 py-16">
+    <h3 class="text-3xl font-bold text-center text-blue-600 mb-10">Why Choose MathCloud Coaching?</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition text-center">
+        <h4 class="text-xl font-bold text-purple-600">Personalized Learning</h4>
+        <p class="mt-2 text-gray-600">Get tailored support based on your learning style and goals.</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition text-center">
+        <h4 class="text-xl font-bold text-purple-600">Progress Tracking</h4>
+        <p class="mt-2 text-gray-600">Track your improvements with regular feedback and reports.</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition text-center">
+        <h4 class="text-xl font-bold text-purple-600">Exam Preparation</h4>
+        <p class="mt-2 text-gray-600">Prepare for WAEC, IGCSE, SAT, and IB exams with expert tutors.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coaching Plans -->
+  <section id="plans" class="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center">
+    <h3 class="text-3xl font-bold">Choose Your Coaching Plan</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 px-6">
+      <div class="bg-white text-gray-800 rounded-2xl shadow-lg p-6">
+        <h4 class="text-xl font-bold text-blue-600">Basic</h4>
+        <p class="mt-2">$50/month</p>
+        <p class="mt-2 text-gray-600">2 sessions per week + assignments.</p>
+      </div>
+      <div class="bg-white text-gray-800 rounded-2xl shadow-lg p-6">
+        <h4 class="text-xl font-bold text-blue-600">Standard</h4>
+        <p class="mt-2">$80/month</p>
+        <p class="mt-2 text-gray-600">3 sessions per week + progress reports.</p>
+      </div>
+      <div class="bg-white text-gray-800 rounded-2xl shadow-lg p-6">
+        <h4 class="text-xl font-bold text-blue-600">Premium</h4>
+        <p class="mt-2">$120/month</p>
+        <p class="mt-2 text-gray-600">Unlimited sessions + 24/7 support.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tutors -->
+  <section class="px-8 py-16">
+    <h3 class="text-3xl font-bold text-center text-blue-600 mb-10">Meet Our Expert Tutors</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:scale-105 transition">
+        <img src="https://randomuser.me/api/portraits/men/45.jpg" class="w-24 h-24 rounded-full mx-auto" alt="Tutor John">
+        <h4 class="mt-4 font-bold text-purple-600">John Williams</h4>
+        <p class="text-gray-600">Algebra & Calculus Specialist</p>
+        <p class="mt-2 text-yellow-500">⭐⭐⭐⭐⭐</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:scale-105 transition">
+        <img src="https://randomuser.me/api/portraits/women/47.jpg" class="w-24 h-24 rounded-full mx-auto" alt="Tutor Sarah">
+        <h4 class="mt-4 font-bold text-purple-600">Sarah Johnson</h4>
+        <p class="text-gray-600">Geometry & Trigonometry</p>
+        <p class="mt-2 text-yellow-500">⭐⭐⭐⭐</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:scale-105 transition">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-24 h-24 rounded-full mx-auto" alt="Tutor Alex">
+        <h4 class="mt-4 font-bold text-purple-600">Alex Brown</h4>
+        <p class="text-gray-600">Statistics & Probability</p>
+        <p class="mt-2 text-yellow-500">⭐⭐⭐⭐⭐</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Form -->
+  <section class="px-8 py-16 bg-gradient-to-r from-purple-100 to-blue-100">
+    <h3 class="text-3xl font-bold text-center text-blue-600 mb-10">Book a Coaching Session</h3>
+    <form class="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-6">
+      <div>
+        <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
+        <input type="text" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-600" placeholder="Enter your name"/>
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-2">Email</label>
+        <input type="email" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-600" placeholder="Enter your email"/>
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-2">Select Plan</label>
+        <select class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-600">
+          <option>Basic - $50</option>
+          <option>Standard - $80</option>
+          <option>Premium - $120</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-2">Preferred Date</label>
+        <input type="date" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-600"/>
+      </div>
+      <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-600 transition">Book Now</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 text-center">
+    <p>© 2025 MathCloud. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathCloud - Empowering Digital Learning</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-white shadow-md fixed w-full top-0 left-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-indigo-600">MathCloud</h1>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="text-indigo-600 font-semibold">Home</a>
+        <a href="eclass.html" class="hover:text-indigo-600 transition">E-Class</a>
+        <a href="shop.html" class="hover:text-indigo-600 transition">Shop</a>
+        <a href="coaching.html" class="hover:text-indigo-600 transition">Coaching</a>
+        <a href="training.html" class="hover:text-indigo-600 transition">Training</a>
+      </nav>
+
+      <!-- Mobile Nav Button -->
+      <button id="menuBtn" class="md:hidden text-3xl focus:outline-none text-indigo-600">
+        ☰
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileMenu" class="hidden bg-white shadow-md md:hidden flex flex-col space-y-4 px-6 py-4">
+      <a href="index.html" class="text-indigo-600 font-semibold">Home</a>
+      <a href="eclass.html" class="hover:text-indigo-600 transition">E-Class</a>
+      <a href="shop.html" class="hover:text-indigo-600 transition">Shop</a>
+      <a href="coaching.html" class="hover:text-indigo-600 transition">Coaching</a>
+      <a href="training.html" class="hover:text-indigo-600 transition">Training</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-center py-32 mt-16">
+    <div class="px-6">
+      <h2 class="text-4xl md:text-6xl font-bold mb-6 animate-pulse">Empowering Learning with Technology</h2>
+      <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8 opacity-90">MathCloud transforms education with e-learning, digital tools, professional coaching, and innovative training programs.</p>
+      <a href="eclass.html" class="bg-white text-indigo-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition">Start Learning</a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h3 class="text-3xl font-bold mb-4">About MathCloud</h3>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        At MathCloud, we believe in the power of technology to transform education.  
+        We offer a holistic ecosystem of <strong>E-Classes</strong>, an educational <strong>Shop</strong>, professional <strong>Coaching</strong>, and tailored <strong>Training</strong> for teachers, schools, and learners.
+      </p>
+      <a href="training.html" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">Explore Training</a>
+    </div>
+    <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/500/external-education-digital-nomading-relocation-flaticons-lineal-color-flat-icons.png" 
+         alt="About MathCloud" 
+         class="rounded-xl shadow-lg w-full h-auto object-contain">
+  </section>
+
+  <!-- Services Overview -->
+  <section class="bg-gray-100 py-20">
+    <h3 class="text-3xl font-bold text-center mb-12">Our Core Services</h3>
+    <div class="max-w-7xl mx-auto px-6 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+      <!-- E-Class -->
+      <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition flex flex-col items-center text-center">
+        <img src="https://img.icons8.com/color/96/000000/classroom.png" alt="E-Class" class="mb-4 w-24 h-24">
+        <h4 class="text-xl font-semibold text-indigo-600 mb-2">E-Class</h4>
+        <p class="text-gray-600 mb-4">Virtual classes designed for personalized, interactive, and engaging learning experiences.</p>
+        <a href="eclass.html" class="text-indigo-600 hover:underline">Learn More →</a>
+      </div>
+
+      <!-- Shop -->
+      <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition flex flex-col items-center text-center">
+        <img src="https://img.icons8.com/color/96/000000/books.png" alt="Shop" class="mb-4 w-24 h-24">
+        <h4 class="text-xl font-semibold text-indigo-600 mb-2">Shop</h4>
+        <p class="text-gray-600 mb-4">Educational books and resources aligned with different curricula and publishers.</p>
+        <a href="shop.html" class="text-indigo-600 hover:underline">Shop Now →</a>
+      </div>
+
+      <!-- Coaching -->
+      <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition flex flex-col items-center text-center">
+        <img src="https://img.icons8.com/color/96/000000/training.png" alt="Coaching" class="mb-4 w-24 h-24">
+        <h4 class="text-xl font-semibold text-indigo-600 mb-2">Coaching</h4>
+        <p class="text-gray-600 mb-4">1-on-1 or group coaching for academic success, career development, and mentorship.</p>
+        <a href="coaching.html" class="text-indigo-600 hover:underline">Get Coached →</a>
+      </div>
+
+      <!-- Training -->
+      <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition flex flex-col items-center text-center">
+        <img src="https://img.icons8.com/color/96/000000/teacher.png" alt="Training" class="mb-4 w-24 h-24">
+        <h4 class="text-xl font-semibold text-indigo-600 mb-2">Training</h4>
+        <p class="text-gray-600 mb-4">Comprehensive teacher training: ICT, leadership, classroom management, and more.</p>
+        <a href="training.html" class="text-indigo-600 hover:underline">View Programs →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Quotes -->
+  <section class="bg-indigo-600 text-white py-20 text-center px-6">
+    <p class="text-xl md:text-2xl italic max-w-3xl mx-auto">“Education is not the learning of facts, but the training of the mind to think.” — Albert Einstein</p>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="max-w-6xl mx-auto px-6 py-20">
+    <h3 class="text-3xl font-bold text-center mb-12">Get in Touch</h3>
+    <form class="grid gap-6 max-w-3xl mx-auto bg-white shadow-lg p-8 rounded-xl">
+      <input type="text" placeholder="Full Name" class="border p-3 rounded-lg focus:ring focus:ring-indigo-300">
+      <input type="email" placeholder="Email Address" class="border p-3 rounded-lg focus:ring focus:ring-indigo-300">
+      <textarea rows="5" placeholder="Your Message" class="border p-3 rounded-lg focus:ring focus:ring-indigo-300"></textarea>
+      <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-8">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+      <p>&copy; 2025 MathCloud. All Rights Reserved.</p>
+      <div class="space-x-4 mt-4 md:mt-0">
+        <a href="#" class="hover:text-white">Privacy Policy</a>
+        <a href="#" class="hover:text-white">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for mobile nav -->
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop - MathCloud</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .fade-in { animation: fadeIn 1.5s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-white via-blue-50 to-purple-50">
+
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center px-6 py-4 shadow-lg bg-white fixed w-full z-10">
+    <h1 class="text-2xl font-bold text-blue-600">MathCloud</h1>
+    <ul class="flex space-x-6 font-semibold">
+      <li><a href="index.html" class="hover:text-purple-600">Home</a></li>
+      <li><a href="eclass.html" class="hover:text-purple-600">E-Class</a></li>
+      <li><a href="shop.html" class="text-purple-600 font-bold">Shop</a></li>
+      <li><a href="coaching.html" class="hover:text-purple-600">Coaching</a></li>
+      <li><a href="training.html" class="hover:text-purple-600">Training</a></li>
+    </ul>
+    <button onclick="toggleCart()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">
+      🛒 Cart (<span id="cart-count">0</span>)
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="h-[60vh] flex flex-col justify-center items-center text-center px-6 fade-in">
+    <h2 class="text-5xl font-bold text-gray-900">MathCloud <span class="text-blue-600">Shop</span></h2>
+    <p class="mt-4 text-lg text-gray-600 max-w-2xl">Buy top-quality math textbooks, curriculum resources, and digital learning kits from trusted publishers.</p>
+  </section>
+
+  <!-- Curriculum Section -->
+  <section class="px-8 py-16">
+    <h3 class="text-3xl font-bold text-center text-blue-600 mb-10">Explore by Curriculum</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- British Curriculum -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition">
+        <h4 class="text-xl font-bold text-purple-600 mb-4">British Curriculum</h4>
+        <ul class="space-y-2 text-gray-700">
+          <li>📘 Cambridge Mathematics – $25</li>
+          <li>📘 Oxford Math Skills – $30</li>
+        </ul>
+      </div>
+      <!-- American Curriculum -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition">
+        <h4 class="text-xl font-bold text-purple-600 mb-4">American Curriculum</h4>
+        <ul class="space-y-2 text-gray-700">
+          <li>📘 McGraw Hill Algebra – $28</li>
+          <li>📘 Pearson Geometry – $32</li>
+        </ul>
+      </div>
+      <!-- Nigerian Curriculum -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition">
+        <h4 class="text-xl font-bold text-purple-600 mb-4">Nigerian Curriculum</h4>
+        <ul class="space-y-2 text-gray-700">
+          <li>📘 New General Mathematics (NECO) – $20</li>
+          <li>📘 Further Mathematics WAEC Guide – $22</li>
+        </ul>
+      </div>
+      <!-- IB Curriculum -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition">
+        <h4 class="text-xl font-bold text-purple-600 mb-4">IB Curriculum</h4>
+        <ul class="space-y-2 text-gray-700">
+          <li>📘 IB Math: Analysis & Approaches – $35</li>
+          <li>📘 IB Math: Applications & Interpretation – $37</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Catalog -->
+  <section class="px-8 py-16">
+    <h3 class="text-3xl font-bold text-center text-blue-600 mb-10">Books by Publishers</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <!-- Book Card -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition flex flex-col justify-between">
+        <div>
+          <h4 class="text-xl font-bold text-purple-600">Oxford Math Skills</h4>
+          <p class="text-gray-600 mt-2">Publisher: Oxford University Press</p>
+          <p class="mt-2 font-semibold text-gray-900">$30</p>
+        </div>
+        <button onclick="addToCart('Oxford Math Skills',30)" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Add to Cart</button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition flex flex-col justify-between">
+        <div>
+          <h4 class="text-xl font-bold text-purple-600">Cambridge Mathematics</h4>
+          <p class="text-gray-600 mt-2">Publisher: Cambridge University Press</p>
+          <p class="mt-2 font-semibold text-gray-900">$25</p>
+        </div>
+        <button onclick="addToCart('Cambridge Mathematics',25)" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Add to Cart</button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition flex flex-col justify-between">
+        <div>
+          <h4 class="text-xl font-bold text-purple-600">McGraw Hill Algebra</h4>
+          <p class="text-gray-600 mt-2">Publisher: McGraw Hill</p>
+          <p class="mt-2 font-semibold text-gray-900">$28</p>
+        </div>
+        <button onclick="addToCart('McGraw Hill Algebra',28)" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Add to Cart</button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition flex flex-col justify-between">
+        <div>
+          <h4 class="text-xl font-bold text-purple-600">Pearson Geometry</h4>
+          <p class="text-gray-600 mt-2">Publisher: Pearson</p>
+          <p class="mt-2 font-semibold text-gray-900">$32</p>
+        </div>
+        <button onclick="addToCart('Pearson Geometry',32)" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Add to Cart</button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition flex flex-col justify-between">
+        <div>
+          <h4 class="text-xl font-bold text-purple-600">IB Math: Analysis & Approaches</h4>
+          <p class="text-gray-600 mt-2">Publisher: IB Publishing</p>
+          <p class="mt-2 font-semibold text-gray-900">$35</p>
+        </div>
+        <button onclick="addToCart('IB Math: Analysis & Approaches',35)" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Add to Cart</button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 hover:scale-105 transition flex flex-col justify-between">
+        <div>
+          <h4 class="text-xl font-bold text-purple-600">New General Mathematics</h4>
+          <p class="text-gray-600 mt-2">Publisher: Longman Nigeria</p>
+          <p class="mt-2 font-semibold text-gray-900">$20</p>
+        </div>
+        <button onclick="addToCart('New General Mathematics',20)" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Add to Cart</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Cart Sidebar -->
+  <div id="cart" class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full transition z-20 flex flex-col">
+    <div class="p-6 border-b flex justify-between items-center">
+      <h3 class="text-xl font-bold text-blue-600">Your Cart</h3>
+      <button onclick="toggleCart()" class="text-gray-600 text-lg">✖</button>
+    </div>
+    <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+    <div class="p-6 border-t">
+      <p class="font-semibold">Total: $<span id="cart-total">0</span></p>
+      <button class="mt-4 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-blue-600 transition">Checkout</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 text-center mt-10">
+    <p>© 2025 MathCloud. All rights reserved.</p>
+  </footer>
+
+  <!-- Cart Logic -->
+  <script>
+    let cart = [];
+    function toggleCart() {
+      const cartEl = document.getElementById('cart');
+      cartEl.classList.toggle('translate-x-full');
+    }
+    function addToCart(product, price) {
+      cart.push({ product, price });
+      renderCart();
+    }
+    function renderCart() {
+      document.getElementById('cart-count').innerText = cart.length;
+      let total = 0;
+      const itemsHTML = cart.map((item, i) => {
+        total += item.price;
+        return `<div class="flex justify-between items-center border-b pb-2">
+                  <span>${item.product}</span>
+                  <span>$${item.price}</span>
+                </div>`;
+      }).join('');
+      document.getElementById('cart-items').innerHTML = itemsHTML || "<p class='text-gray-500'>Cart is empty</p>";
+      document.getElementById('cart-total').innerText = total;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathCloud - Training</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s ease-in-out;
+    }
+    .accordion-content.open {
+      max-height: 1000px; /* Large enough for content */
+      padding-top: 1rem;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 via-white to-purple-100 text-gray-800 font-sans">
+  
+  <!-- Navbar -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-indigo-600">MathCloud</h1>
+      <nav class="space-x-6">
+        <a href="index.html" class="hover:text-indigo-600 transition">Home</a>
+        <a href="shop.html" class="hover:text-indigo-600 transition">Shop</a>
+        <a href="coaching.html" class="hover:text-indigo-600 transition">Coaching</a>
+        <a href="training.html" class="text-indigo-600 font-semibold">Training</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">Professional Training Programs</h2>
+      <p class="text-lg md:text-xl opacity-90">Choose from a wide range of categories to enhance your teaching skills and school systems.</p>
+    </div>
+  </section>
+
+  <!-- Accordion Categories -->
+  <section class="max-w-7xl mx-auto px-6 py-16 space-y-6">
+
+    <!-- Category -->
+    <div class="bg-white shadow-lg rounded-xl">
+      <button class="accordion-btn w-full flex justify-between items-center px-6 py-4 text-left text-xl font-semibold text-indigo-600 focus:outline-none">
+        ICT & Technology
+        <span class="arrow">+</span>
+      </button>
+      <div class="accordion-content px-6 pb-6">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <!-- Card -->
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md hover:shadow-xl transition">
+            <h4 class="font-bold text-lg">Google Classroom Mastery</h4>
+            <p class="text-gray-600 text-sm my-2">Design, assign and assess engaging lessons digitally.</p>
+            <p class="text-sm">📌 Basic: $49 | ⭐ Standard: $99 | 🚀 Premium: $149</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Subscribe</button>
+          </div>
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md hover:shadow-xl transition">
+            <h4 class="font-bold text-lg">School Portal Management</h4>
+            <p class="text-gray-600 text-sm my-2">Manage student data, attendance, grades, and reports.</p>
+            <p class="text-sm">📌 Basic: $59 | ⭐ Standard: $119 | 🚀 Premium: $179</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md hover:shadow-xl transition">
+            <h4 class="font-bold text-lg">Digital Lesson Creation</h4>
+            <p class="text-gray-600 text-sm my-2">Use interactive tools for multimedia lessons.</p>
+            <p class="text-sm">📌 Basic: $79 | ⭐ Standard: $149 | 🚀 Premium: $199</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="bg-white shadow-lg rounded-xl">
+      <button class="accordion-btn w-full flex justify-between items-center px-6 py-4 text-left text-xl font-semibold text-indigo-600">
+        Classroom Management
+        <span class="arrow">+</span>
+      </button>
+      <div class="accordion-content px-6 pb-6">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">Managing Behavior in Class</h4>
+            <p class="text-gray-600 text-sm my-2">Strategies for a positive and disciplined classroom.</p>
+            <p class="text-sm">📌 Basic: $39 | ⭐ Standard: $89 | 🚀 Premium: $129</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">Student Engagement</h4>
+            <p class="text-gray-600 text-sm my-2">Techniques to motivate and involve every learner.</p>
+            <p class="text-sm">📌 Basic: $49 | ⭐ Standard: $99 | 🚀 Premium: $159</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="bg-white shadow-lg rounded-xl">
+      <button class="accordion-btn w-full flex justify-between items-center px-6 py-4 text-left text-xl font-semibold text-indigo-600">
+        Learning Styles & Blended Classes
+        <span class="arrow">+</span>
+      </button>
+      <div class="accordion-content px-6 pb-6">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">Blended Learning Approaches</h4>
+            <p class="text-gray-600 text-sm my-2">Combine physical and digital learning effectively.</p>
+            <p class="text-sm">📌 Basic: $59 | ⭐ Standard: $119 | 🚀 Premium: $179</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">Learning Styles Awareness</h4>
+            <p class="text-gray-600 text-sm my-2">Adapt lessons for visual, auditory & kinesthetic learners.</p>
+            <p class="text-sm">📌 Basic: $39 | ⭐ Standard: $89 | 🚀 Premium: $139</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="bg-white shadow-lg rounded-xl">
+      <button class="accordion-btn w-full flex justify-between items-center px-6 py-4 text-left text-xl font-semibold text-indigo-600">
+        Leadership Development
+        <span class="arrow">+</span>
+      </button>
+      <div class="accordion-content px-6 pb-6">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">School Leadership</h4>
+            <p class="text-gray-600 text-sm my-2">Train leaders in digital adoption and staff development.</p>
+            <p class="text-sm">📌 Basic: $99 | ⭐ Standard: $179 | 🚀 Premium: $249</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">Policy & Planning</h4>
+            <p class="text-gray-600 text-sm my-2">Learn to create and implement school digital policies.</p>
+            <p class="text-sm">📌 Basic: $89 | ⭐ Standard: $159 | 🚀 Premium: $229</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="bg-white shadow-lg rounded-xl">
+      <button class="accordion-btn w-full flex justify-between items-center px-6 py-4 text-left text-xl font-semibold text-indigo-600">
+        Lesson Creation
+        <span class="arrow">+</span>
+      </button>
+      <div class="accordion-content px-6 pb-6">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">Interactive Lessons</h4>
+            <p class="text-gray-600 text-sm my-2">Make lessons hands-on and engaging using technology.</p>
+            <p class="text-sm">📌 Basic: $59 | ⭐ Standard: $129 | 🚀 Premium: $189</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+          <div class="bg-indigo-50 p-5 rounded-lg shadow-md">
+            <h4 class="font-bold text-lg">Multimedia Lesson Design</h4>
+            <p class="text-gray-600 text-sm my-2">Add visuals, videos & audio for impactful lessons.</p>
+            <p class="text-sm">📌 Basic: $69 | ⭐ Standard: $139 | 🚀 Premium: $199</p>
+            <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-8">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+      <p>&copy; 2025 MathCloud. All Rights Reserved.</p>
+      <div class="space-x-4 mt-4 md:mt-0">
+        <a href="#" class="hover:text-white">Privacy Policy</a>
+        <a href="#" class="hover:text-white">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Accordion Script -->
+  <script>
+    document.querySelectorAll('.accordion-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const arrow = btn.querySelector('.arrow');
+        content.classList.toggle('open');
+        arrow.textContent = content.classList.contains('open') ? '-' : '+';
+      });
+    });
+  </script>
+</body>
+</html>
