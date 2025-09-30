@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teacher WYSIWYG Lesson Creator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher WYSIWYG Lesson Creator</title>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <!-- ✅ Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
-<!-- Quill Rich Text Editor -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <!-- ✅ Quill Rich Text Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-<style>
-  body { font-family: "Nunito", sans-serif; background:#f9f9f9; margin:0; padding:20px; }
-  header { background:#4a90e2; color:#fff; padding:1rem; text-align:center; }
-  #lessonContainer { max-width:800px; margin:auto; padding:20px; background:#fff; border-radius:10px; }
-  .lesson-section { margin-bottom:20px; }
-  .quiz-question { margin:10px 0; }
-  button { margin:10px 0; padding:10px 20px; border:none; border-radius:5px; background:#4a90e2; color:white; cursor:pointer; }
-  button:hover { background:#357ABD; }
-  .lesson-list { max-width:800px; margin:auto; margin-top:20px; }
-  .lesson-card { background:#fff; padding:15px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-  /* Teacher video frame */
-  .teacher-video { position: fixed; bottom:15px; right:15px; width:120px; height:120px; border-radius:15px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.3); transform: perspective(1000px) rotateY(-5deg); z-index:1000; }
-  .teacher-video video, .teacher-video audio { width:100%; height:100%; object-fit:cover; }
-  .quiz-inputs input { margin-right:5px; margin-bottom:5px; }
-</style>
+  <style>
+    body { font-family: "Nunito", sans-serif; background:#f9f9f9; margin:0; padding:20px; }
+    header { background:#4a90e2; color:#fff; padding:1rem; text-align:center; }
+    #lessonContainer { max-width:900px; margin:auto; padding:20px; background:#fff; border-radius:10px; }
+    #editorContainer { height:400px; }
+    .lesson-section { margin-bottom:20px; }
+    .quiz-question { margin:15px 0; padding:10px; border:1px solid #ddd; border-radius:8px; background:#fafafa; }
+    button { margin:5px; padding:8px 16px; border:none; border-radius:5px; background:#4a90e2; color:white; cursor:pointer; }
+    button:hover { background:#357ABD; }
+    .lesson-list { max-width:900px; margin:auto; margin-top:20px; }
+    .lesson-card { background:#fff; padding:15px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    details summary { cursor:pointer; font-weight:bold; padding:5px; }
+    .quiz-inputs input[type=text] { margin-right:5px; margin-bottom:5px; }
+    .filters { max-width:900px; margin:20px auto; display:flex; gap:10px; }
+    select { padding:8px; border-radius:5px; border:1px solid #ccc; }
+  </style>
 </head>
 <body>
 
@@ -35,89 +36,114 @@
 
 <div id="lessonContainer">
 
-  <!-- Editable lesson content -->
-  <div id="editor">
-    <h1 contenteditable="true">Mathematics (Year 2) — Multiplication as Repeated Addition</h1>
-
-    <section class="lesson-section note" contenteditable="true">
-      <h2>Introduction</h2>
-      <p>Multiplication is a quick way of adding the same number many times.  
-      Instead of writing <b>2 + 2 + 2 + 2 = 8</b>, we can simply say <b>2 × 4 = 8</b>.</p>
-    </section>
-
-    <section class="lesson-section note" contenteditable="true">
-      <h2>Main Content</h2>
-      <ul>
-        <li>Multiplication means “times” or “groups of”.</li>
-        <li><b>Example 1:</b> 3 + 3 + 3 = 9 → 3 × 3 = 9.</li>
-        <li><b>Example 2:</b> 5 + 5 + 5 + 5 = 20 → 5 × 4 = 20.</li>
-      </ul>
-    </section>
-
-    <section class="lesson-section summary" contenteditable="true">
-      <h2>Key Points</h2>
-      <ul>
-        <li>Multiplication is repeated addition.</li>
-        <li>The first number tells what is being added.</li>
-        <li>The second number tells how many times.</li>
-      </ul>
-    </section>
-
-    <!-- Editable Quiz Section -->
-    <section class="lesson-section quiz" contenteditable="false">
-      <h2>Assessment — Instant Grading</h2>
-      <div id="quizContainer"></div>
-      <button type="button" onclick="checkAnswers()">Check Answers</button>
-      <p id="score"></p>
-      <div style="margin-top:10px;">
-        <button type="button" onclick="addQuizQuestion()">Add Question</button>
-      </div>
-    </section>
-
+  <!-- ✅ Quill Toolbar -->
+  <div id="toolbar">
+    <span class="ql-formats">
+      <select class="ql-header">
+        <option value="1"></option>
+        <option value="2"></option>
+        <option selected></option>
+      </select>
+      <select class="ql-font"></select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-bold"></button>
+      <button class="ql-italic"></button>
+      <button class="ql-underline"></button>
+      <button class="ql-strike"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-list" value="ordered"></button>
+      <button class="ql-list" value="bullet"></button>
+      <button class="ql-indent" value="-1"></button>
+      <button class="ql-indent" value="+1"></button>
+    </span>
+    <span class="ql-formats">
+      <select class="ql-align"></select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-link"></button>
+      <button class="ql-image"></button>
+      <button class="ql-video"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-clean"></button>
+    </span>
   </div>
+
+  <!-- ✅ Rich text editor -->
+  <div id="editorContainer"></div>
+
+  <!-- ✅ Quiz Section -->
+  <section class="lesson-section quiz">
+    <h2>Assessment — Instant Grading</h2>
+    <div id="quizContainer"></div>
+    <button type="button" onclick="checkAnswers()">Check Answers</button>
+    <p id="score"></p>
+    <div style="margin-top:10px;">
+      <button type="button" onclick="addQuizQuestion()">Add Question</button>
+    </div>
+  </section>
 
   <button id="saveLessonBtn">Save Lesson to Firebase</button>
 </div>
 
 <h2 style="text-align:center; margin-top:30px;">Saved Lessons</h2>
+
+<!-- Filters -->
+<div class="filters">
+  <select id="filterClass"><option value="">All Classes</option></select>
+  <select id="filterSubject"><option value="">All Subjects</option></select>
+  <select id="filterTopic"><option value="">All Topics</option></select>
+</div>
+
 <div id="lessonList" class="lesson-list"></div>
 
-<!-- Teacher video -->
-<div class="teacher-video">
-  <video autoplay loop muted>
-    <source src="lesson1.mp4" type="video/mp4">
-    <audio controls autoplay loop>
-      <source src="lesson1.mp3" type="audio/mpeg">
-    </audio>
-    Your browser does not support video/audio.
-  </video>
-</div>
 <script>
-  // 🔹 Firebase
+  // 🔹 Firebase initialization
   const firebaseConfig = {
-    apiKey: "AIzaSyCgf5fcpPQvqR1iWtr07b8u5lCRWqvFdqA",
-    authDomain: "totsland-school-edu.firebaseapp.com",
-    projectId: "totsland-school-edu",
-    storageBucket: "totsland-school-edu.appspot.com",
-    messagingSenderId: "311504627437",
-    appId: "1:311504627437:web:ee523c8c643d4dca43cee4",
-    measurementId: "G-65ET4TKMQM"
+    apiKey: "AIzaSyDz1suJpOPHC6N7cEZS0pBqVY-z7U4FEwU",
+    authDomain: "upload-34aa5.firebaseapp.com",
+    projectId: "upload-34aa5",
+    storageBucket: "upload-34aa5.firebasestorage.app",
+    messagingSenderId: "680131375536",
+    appId: "1:680131375536:web:081ef6db97ffe9fe816675",
+    measurementId: "G-CGS8GJZQL3"
   };
-  const app = firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  const editor = document.getElementById("editor");
-  const lessonList = document.getElementById("lessonList");
   let editingId = null;
 
-  // Default Quiz Questions — now 3 questions
+  // ✅ Init Quill Editor with default lesson
+  const quill = new Quill("#editorContainer", {
+    theme: "snow",
+    modules: { toolbar: "#toolbar" }
+  });
+  quill.root.innerHTML = `
+    <h1>Mathematics (Year 2) — Multiplication as Repeated Addition</h1>
+    <h2>Introduction</h2>
+    <p>Multiplication is a quick way of adding the same number many times.</p>
+    <h2>Main Content</h2>
+    <ul>
+      <li>3 + 3 + 3 = 9 → 3 × 3 = 9</li>
+      <li>5 + 5 + 5 + 5 = 20 → 5 × 4 = 20</li>
+    </ul>
+    <h2>Key Points</h2>
+    <ul>
+      <li>Multiplication is repeated addition.</li>
+      <li>The first number tells what is being added.</li>
+      <li>The second number tells how many times.</li>
+    </ul>
+  `;
+
+  // ✅ Default Quiz Questions
   let questions = [
     { q: "2 + 2 + 2 = ?", options: ["4","6","8"], answer: "6" },
     { q: "3 × 4 = ?", options: ["7","12","9"], answer: "12" },
     { q: "Write as multiplication: 5 + 5 + 5 + 5", options: ["5 × 3","5 × 4","4 × 5"], answer: "5 × 4" }
   ];
 
-  // Render the quiz section
   function renderQuiz() {
     const container = document.getElementById("quizContainer");
     container.innerHTML = "";
@@ -127,50 +153,86 @@
       div.innerHTML = `
         <p><b>Q${index+1}:</b> <span contenteditable="true">${item.q}</span></p>
         <div class="quiz-inputs">
-          ${item.options.map((opt,i)=>`<input type="text" value="${opt}" data-index="${index}" data-opt="${i}">`).join('')}
+          ${item.options.map((opt,i)=>`
+            <label>
+              <input type="radio" name="q${index}" value="${opt}">
+              <input type="text" value="${opt}" data-index="${index}" data-opt="${i}">
+            </label>
+          `).join('<br>')}
         </div>
-        <p>Answer: <input type="text" value="${item.answer}" data-index="${index}" data-answer="true"></p>
+        <p>Correct Answer: 
+          <input type="text" value="${item.answer}" data-index="${index}" data-answer="true">
+        </p>
       `;
       container.appendChild(div);
     });
   }
 
-  // Update quiz array from inputs before saving
-  function updateQuizFromInputs() {
-    document.querySelectorAll(".quiz-question").forEach(div=>{
-      const idx = [...div.parentNode.children].indexOf(div);
-      questions[idx].q = div.querySelector("p span").innerText;
-      const opts = div.querySelectorAll("input[type=text]");
-      questions[idx].options = [...opts].filter(i=>!i.dataset.answer).map(i=>i.value);
-      questions[idx].answer = [...opts].find(i=>i.dataset.answer).value;
-    });
+function updateQuizFromInputs() {
+  const quizDivs = document.querySelectorAll(".quiz-question");
+
+  // 🔹 Reset questions length if needed
+  if (!Array.isArray(questions)) questions = [];
+  if (questions.length < quizDivs.length) {
+    for (let i = questions.length; i < quizDivs.length; i++) {
+      questions.push({ q: "", options: [], answer: "" });
+    }
   }
 
-  // Add a new question
+  quizDivs.forEach((div, idx) => {
+    if (!questions[idx]) questions[idx] = { q: "", options: [], answer: "" };
+
+    const qText = div.querySelector("p span")?.innerText || "";
+    const opts = div.querySelectorAll("input[type=text][data-opt]");
+    const ans = div.querySelector("input[data-answer]")?.value || "";
+
+    questions[idx].q = qText;
+    questions[idx].options = [...opts].map(i => i.value);
+    questions[idx].answer = ans;
+  });
+}
+
+
   function addQuizQuestion() {
     questions.push({ q:"New Question?", options:["Option 1","Option 2","Option 3"], answer:"Option 1" });
     renderQuiz();
   }
 
-  // Check answers (demo using prompt)
   function checkAnswers() {
     updateQuizFromInputs();
     let score=0;
     questions.forEach((item,index)=>{
-      const selected = prompt(item.q + "\nOptions: " + item.options.join(","));
-      if(selected && selected==item.answer) score++;
+      const selected = document.querySelector(`input[name="q${index}"]:checked`);
+      if(selected && selected.value == item.answer) score++;
     });
     document.getElementById("score").innerText = `You scored ${score} out of ${questions.length}`;
   }
 
-  // Save lesson to Firebase
+  // ✅ Extract Class, Subject, Topic from lesson <h1>
+  function parseLessonHeader(html) {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    const header = tempDiv.querySelector("h1")?.innerText || "";
+    const match = header.match(/^(.*?)\s*\((.*?)\)\s*—\s*(.*)$/);
+    if (match) {
+      return { subject: match[1].trim(), class: match[2].trim(), topic: match[3].trim() };
+    }
+    return { subject: header, class: "", topic: "" };
+  }
+
   document.getElementById("saveLessonBtn").addEventListener("click", async ()=>{
     updateQuizFromInputs();
+    const html = quill.root.innerHTML;
+    const headerData = parseLessonHeader(html);
+
     const lessonData = {
-      html: editor.innerHTML,
-      quiz: questions,
+      html, quiz: questions,
+      subject: headerData.subject,
+      class: headerData.class,
+      topic: headerData.topic,
       timestamp: new Date()
     };
+
     if(editingId){
       await db.collection("lessons").doc(editingId).update(lessonData);
       editingId=null;
@@ -181,33 +243,82 @@
     alert("Lesson saved!");
   });
 
-  // Load saved lessons
+  // ✅ Filters
+  async function loadFilters(allData) {
+    const classes = new Set(), subjects = new Set(), topics = new Set();
+    allData.forEach(d=>{
+      classes.add(d.class); subjects.add(d.subject); topics.add(d.topic);
+    });
+    function populateSelect(id, values) {
+      const sel=document.getElementById(id);
+      sel.innerHTML = `<option value="">All ${id.replace("filter","")}</option>`;
+      values.forEach(v=>{
+        if(v){ const opt=document.createElement("option"); opt.value=v; opt.innerText=v; sel.appendChild(opt); }
+      });
+    }
+    populateSelect("filterClass",[...classes]);
+    populateSelect("filterSubject",[...subjects]);
+    populateSelect("filterTopic",[...topics]);
+  }
+
+  // ✅ Load Lessons
   async function loadLessons() {
+    const lessonList = document.getElementById("lessonList");
     lessonList.innerHTML="";
     const snapshot = await db.collection("lessons").orderBy("timestamp","desc").get();
-    snapshot.forEach(doc=>{
-      const div = document.createElement("div");
+    const allData = snapshot.docs.map(doc=>({...doc.data(), id:doc.id}));
+    loadFilters(allData);
+
+    const fc=document.getElementById("filterClass").value;
+    const fs=document.getElementById("filterSubject").value;
+    const ft=document.getElementById("filterTopic").value;
+
+    const filtered=allData.filter(d=>
+      (!fc || d.class===fc) && (!fs || d.subject===fs) && (!ft || d.topic===ft)
+    );
+
+    filtered.forEach(data=>{
+      const div=document.createElement("div");
       div.className="lesson-card";
-      div.innerHTML = `
-        ${doc.data().html}
-        <button onclick="editLesson('${doc.id}')">Edit</button>
+      div.innerHTML=`
+        <details>
+          <summary>${data.class} | ${data.subject} — ${data.topic}</summary>
+          <div style="margin-top:10px;">
+            <button onclick="editLesson('${data.id}')">✏️ Edit</button>
+            <button onclick="deleteLesson('${data.id}')">🗑 Delete</button>
+            <div style="margin-top:10px;">${data.html}</div>
+          </div>
+        </details>
       `;
       lessonList.appendChild(div);
     });
   }
 
-  // Edit lesson
   async function editLesson(id){
-    const doc = await db.collection("lessons").doc(id).get();
-    editor.innerHTML = doc.data().html;
-    questions = doc.data().quiz;
+    const docSnap = await db.collection("lessons").doc(id).get();
+    quill.root.innerHTML = docSnap.data().html;
+    questions = docSnap.data().quiz;
     renderQuiz();
     editingId = id;
     window.scrollTo(0,0);
   }
 
+  async function deleteLesson(id){
+    if(confirm("Are you sure you want to delete this lesson?")){
+      await db.collection("lessons").doc(id).delete();
+      loadLessons();
+      alert("Lesson deleted.");
+    }
+  }
+
+  // ✅ Filter change listeners
+  document.getElementById("filterClass").addEventListener("change", loadLessons);
+  document.getElementById("filterSubject").addEventListener("change", loadLessons);
+  document.getElementById("filterTopic").addEventListener("change", loadLessons);
+
   renderQuiz();
   loadLessons();
 </script>
+
 </body>
 </html>
