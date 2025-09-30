@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher WYSIWYG Lesson Creator</title>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+<!-- Quill Rich Text Editor -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<style>
+  body { font-family: "Nunito", sans-serif; background:#f9f9f9; margin:0; padding:20px; }
+  header { background:#4a90e2; color:#fff; padding:1rem; text-align:center; }
+  #lessonContainer { max-width:800px; margin:auto; padding:20px; background:#fff; border-radius:10px; }
+  .lesson-section { margin-bottom:20px; }
+  .quiz-question { margin:10px 0; }
+  button { margin:10px 0; padding:10px 20px; border:none; border-radius:5px; background:#4a90e2; color:white; cursor:pointer; }
+  button:hover { background:#357ABD; }
+  .lesson-list { max-width:800px; margin:auto; margin-top:20px; }
+  .lesson-card { background:#fff; padding:15px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+  /* Teacher video frame */
+  .teacher-video { position: fixed; bottom:15px; right:15px; width:120px; height:120px; border-radius:15px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.3); transform: perspective(1000px) rotateY(-5deg); z-index:1000; }
+  .teacher-video video, .teacher-video audio { width:100%; height:100%; object-fit:cover; }
+  .quiz-inputs input { margin-right:5px; margin-bottom:5px; }
+</style>
+</head>
+<body>
+
+<header><h1>Teacher WYSIWYG Lesson Creator</h1></header>
+
+<div id="lessonContainer">
+
+  <!-- Editable lesson content -->
+  <div id="editor">
+    <h1 contenteditable="true">Mathematics (Year 2) — Multiplication as Repeated Addition</h1>
+
+    <section class="lesson-section note" contenteditable="true">
+      <h2>Introduction</h2>
+      <p>Multiplication is a quick way of adding the same number many times.  
+      Instead of writing <b>2 + 2 + 2 + 2 = 8</b>, we can simply say <b>2 × 4 = 8</b>.</p>
+    </section>
+
+    <section class="lesson-section note" contenteditable="true">
+      <h2>Main Content</h2>
+      <ul>
+        <li>Multiplication means “times” or “groups of”.</li>
+        <li><b>Example 1:</b> 3 + 3 + 3 = 9 → 3 × 3 = 9.</li>
+        <li><b>Example 2:</b> 5 + 5 + 5 + 5 = 20 → 5 × 4 = 20.</li>
+      </ul>
+    </section>
+
+    <section class="lesson-section summary" contenteditable="true">
+      <h2>Key Points</h2>
+      <ul>
+        <li>Multiplication is repeated addition.</li>
+        <li>The first number tells what is being added.</li>
+        <li>The second number tells how many times.</li>
+      </ul>
+    </section>
+
+    <!-- Editable Quiz Section -->
+    <section class="lesson-section quiz" contenteditable="false">
+      <h2>Assessment — Instant Grading</h2>
+      <div id="quizContainer"></div>
+      <button type="button" onclick="checkAnswers()">Check Answers</button>
+      <p id="score"></p>
+      <div style="margin-top:10px;">
+        <button type="button" onclick="addQuizQuestion()">Add Question</button>
+      </div>
+    </section>
+
+  </div>
+
+  <button id="saveLessonBtn">Save Lesson to Firebase</button>
+</div>
+
+<h2 style="text-align:center; margin-top:30px;">Saved Lessons</h2>
+<div id="lessonList" class="lesson-list"></div>
+
+<!-- Teacher video -->
+<div class="teacher-video">
+  <video autoplay loop muted>
+    <source src="lesson1.mp4" type="video/mp4">
+    <audio controls autoplay loop>
+      <source src="lesson1.mp3" type="audio/mpeg">
+    </audio>
+    Your browser does not support video/audio.
+  </video>
+</div>
+<script>
+  // 🔹 Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgf5fcpPQvqR1iWtr07b8u5lCRWqvFdqA",
+    authDomain: "totsland-school-edu.firebaseapp.com",
+    projectId: "totsland-school-edu",
+    storageBucket: "totsland-school-edu.appspot.com",
+    messagingSenderId: "311504627437",
+    appId: "1:311504627437:web:ee523c8c643d4dca43cee4",
+    measurementId: "G-65ET4TKMQM"
+  };
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const editor = document.getElementById("editor");
+  const lessonList = document.getElementById("lessonList");
+  let editingId = null;
+
+  // Default Quiz Questions — now 3 questions
+  let questions = [
+    { q: "2 + 2 + 2 = ?", options: ["4","6","8"], answer: "6" },
+    { q: "3 × 4 = ?", options: ["7","12","9"], answer: "12" },
+    { q: "Write as multiplication: 5 + 5 + 5 + 5", options: ["5 × 3","5 × 4","4 × 5"], answer: "5 × 4" }
+  ];
+
+  // Render the quiz section
+  function renderQuiz() {
+    const container = document.getElementById("quizContainer");
+    container.innerHTML = "";
+    questions.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "quiz-question";
+      div.innerHTML = `
+        <p><b>Q${index+1}:</b> <span contenteditable="true">${item.q}</span></p>
+        <div class="quiz-inputs">
+          ${item.options.map((opt,i)=>`<input type="text" value="${opt}" data-index="${index}" data-opt="${i}">`).join('')}
+        </div>
+        <p>Answer: <input type="text" value="${item.answer}" data-index="${index}" data-answer="true"></p>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  // Update quiz array from inputs before saving
+  function updateQuizFromInputs() {
+    document.querySelectorAll(".quiz-question").forEach(div=>{
+      const idx = [...div.parentNode.children].indexOf(div);
+      questions[idx].q = div.querySelector("p span").innerText;
+      const opts = div.querySelectorAll("input[type=text]");
+      questions[idx].options = [...opts].filter(i=>!i.dataset.answer).map(i=>i.value);
+      questions[idx].answer = [...opts].find(i=>i.dataset.answer).value;
+    });
+  }
+
+  // Add a new question
+  function addQuizQuestion() {
+    questions.push({ q:"New Question?", options:["Option 1","Option 2","Option 3"], answer:"Option 1" });
+    renderQuiz();
+  }
+
+  // Check answers (demo using prompt)
+  function checkAnswers() {
+    updateQuizFromInputs();
+    let score=0;
+    questions.forEach((item,index)=>{
+      const selected = prompt(item.q + "\nOptions: " + item.options.join(","));
+      if(selected && selected==item.answer) score++;
+    });
+    document.getElementById("score").innerText = `You scored ${score} out of ${questions.length}`;
+  }
+
+  // Save lesson to Firebase
+  document.getElementById("saveLessonBtn").addEventListener("click", async ()=>{
+    updateQuizFromInputs();
+    const lessonData = {
+      html: editor.innerHTML,
+      quiz: questions,
+      timestamp: new Date()
+    };
+    if(editingId){
+      await db.collection("lessons").doc(editingId).update(lessonData);
+      editingId=null;
+    } else {
+      await db.collection("lessons").add(lessonData);
+    }
+    loadLessons();
+    alert("Lesson saved!");
+  });
+
+  // Load saved lessons
+  async function loadLessons() {
+    lessonList.innerHTML="";
+    const snapshot = await db.collection("lessons").orderBy("timestamp","desc").get();
+    snapshot.forEach(doc=>{
+      const div = document.createElement("div");
+      div.className="lesson-card";
+      div.innerHTML = `
+        ${doc.data().html}
+        <button onclick="editLesson('${doc.id}')">Edit</button>
+      `;
+      lessonList.appendChild(div);
+    });
+  }
+
+  // Edit lesson
+  async function editLesson(id){
+    const doc = await db.collection("lessons").doc(id).get();
+    editor.innerHTML = doc.data().html;
+    questions = doc.data().quiz;
+    renderQuiz();
+    editingId = id;
+    window.scrollTo(0,0);
+  }
+
+  renderQuiz();
+  loadLessons();
+</script>
+</body>
+</html>
